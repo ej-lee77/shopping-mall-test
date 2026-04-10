@@ -1,0 +1,9 @@
+@use "../../App.scss" as g;
+
+.user-info-wrap{
+    @include g.myFlex($jc: flex-start, $ai: flex-start);
+
+    .user-info-left{
+        border-right: 1px solid #ccc;
+    }
+}

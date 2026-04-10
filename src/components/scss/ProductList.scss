@@ -1,0 +1,27 @@
+.sub-goods-list{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
+    gap: 50px;
+
+    li{
+
+        a{
+            .img-box{
+                border: 1px solid #ccc;
+                aspect-ratio: 1/1;
+                padding: 40px;
+            }
+            img{
+                object-fit: contain;
+            }
+            .text-box{
+                div{
+                    span{
+                        color: red;
+                        margin-left: 10px;
+                    }
+                }
+            }
+        }
+    }
+}
