@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { create } from "zustand";
 import { auth, db, googleProvider } from "../firebase/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -7,12 +7,30 @@ export const useAuthStore = create((set, get)=>({
     // 로그인, 회원가입
     user: null,
 
+    // firebase 로그인 (앱 최초 실행)
+    // 자동로그인 방지
+    initAuth: ()=>{
+        onAuthStateChanged(auth, async (firebaseUser)=>{
+            if(firebaseUser){
+                if(!firebaseUser.emailVerified){
+                    alert("이메일 인증을 먼저 해주세요!!");
+                    await signOut(auth);
+                    set({user:null});
+                    return
+                }
+            }
+        })
+    },
+
     // 회원가입
     onMember: async({uName, nickname, email, password, phone, profile})=>{
         try{
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             console.log(userCredential);
             const user = userCredential.user;
+
+            // 인증 메일 보내기
+            await sendEmailVerification(user);
 
             // Firestore에 저장하기
             // 1단계 - 저장위치 지정 doc(db정보, "컬렉션", 문서)
@@ -32,8 +50,8 @@ export const useAuthStore = create((set, get)=>({
             await setDoc(userRef, userInfo);
 
             // 4단계 - zustand에 상태저장
-            set({user: userInfo});
-            alert("회원가입성공");
+            // set({user: userInfo});
+            alert("회원가입성공! 이메일 인증을 완료해주세요");
         }catch(err){
             alert(err.message);
         }

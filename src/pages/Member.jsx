@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import "./scss/login.scss"
 import { useAuthStore } from '../store/useAuthStore';
 
 export default function Member() {
   const onMember = useAuthStore((s) => s.onMember);
+  const navigation = useNavigate();
 
   const [formData, setFormData] = useState({
     uName: "",
@@ -27,6 +28,7 @@ export default function Member() {
   const handleSubmit = (e)=>{
     e.preventDefault();
     onMember(formData);
+    navigation("/");
   }
 
   return (

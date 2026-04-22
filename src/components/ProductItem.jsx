@@ -5,6 +5,7 @@ export default function ProductItem({sendItem}) {
     <div>
         <div className="img-box">
             <img src={sendItem.image} alt={sendItem.title} />
+            <p>{sendItem.rating}</p>
         </div>
         <div className="text-box">
             <h3>{sendItem.title}</h3>

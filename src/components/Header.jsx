@@ -14,7 +14,7 @@ import { useProductStore } from '../store/useProductStore';
 // ]
 export default function Header() {
     const {user, onLogout} = useAuthStore();
-    const {menus, cartCount} = useProductStore();
+    const {menus, cartCount, searchWordAll, onSetSearchWordAll} = useProductStore();
     const navigate = useNavigate();
 
     // 스크롤 체크할 변수
@@ -42,6 +42,11 @@ export default function Header() {
     const handleLogout = ()=>{
         onLogout();
         navigate("/");
+    }
+
+    // search 돋보기 클릭하면
+    const handleSearch = ()=>{
+        navigate("/searchPage");
     }
   return (
     <header className={isScroll ? "active" : ""}>
@@ -93,8 +98,8 @@ export default function Header() {
                     </li>
                 </ul>
                 <div className="search-wrap">
-                    <input type="text" />
-                    <i className="search-icon"><img src="./images/search.png" alt="search" /></i>
+                    <input type="text" value={searchWordAll} onChange={(e)=>onSetSearchWordAll(e.target.value)}/>
+                    <i className="search-icon" onClick={handleSearch}><img src="./images/search.png" alt="search" /></i>
                 </div>
             </div>
         </div>

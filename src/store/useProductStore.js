@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { productsData } from "../data/productsData";
 import { persist } from "zustand/middleware";
+import OrderList from "../components/OrderList";
 
 export const useProductStore = create(
     persist((set, get) => ({
@@ -9,6 +10,22 @@ export const useProductStore = create(
 
         // 메뉴를 저장할 변수
         menus: [],
+
+        // search 서브페이지내에서의
+        searchWord: "",
+        onSetSearchWord: (word)=>set({searchWord: word}),
+
+        // 전체 search
+        searchWordAll: "",
+        onSetSearchWordAll: (word)=>set({searchWordAll: word}),
+
+        // 정렬
+        // 정렬의 종류를 체크할 변수
+        sortType: "",
+        // 정렬의 차순을 저장할 변수 기본오름
+        sortOrder: "asc",
+        onSetSort: (type, order="asc")=>
+            set({sortType: type, sortOrder: order}),
 
         // 외부데이터 불러오기
         onFetchItems: async () => {
@@ -232,6 +249,13 @@ export const useProductStore = create(
                 cartItems: []
             })
         },
+        onCancelOrder: (orderId)=>{
+            const prevOrder = get().orderLists;
+            const updateOrder = prevOrder.map((order)=>
+                order.id === orderId ? {...order, status: "취소신청중"} : order
+            );
+            set({orderLists: updateOrder});
+        }
     }),
     {
         name: "product-storage",

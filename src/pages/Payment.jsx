@@ -3,9 +3,11 @@ import SectionTitle from '../components/SectionTitle'
 import { useProductStore } from '../store/useProductStore'
 import PaymentModal from '../components/PaymentModal';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/useAuthStore';
 
 export default function Payment() {
   const {totalPrice, coupons, finalPrice, onSelectedCoupon, onFinalPrice, cartItems, selectedCoupon, onAddOrder} = useProductStore();
+  const {user} = useAuthStore();
 
   //useLocation() 현재 페이지의 url + state정보를 가져오는 훅
   const navigate = useNavigate();
@@ -17,8 +19,16 @@ export default function Payment() {
   const [showPay, setShowPay] = useState(false);
 
   const handlePayment = ()=>{
+    // 결제하기전에 로그인 확인하고 로그인전이면 로그인화면으로
+    if(!user){
+      alert("로그인 후 이용하세요");
+      navigate("/login")
+    }
     setShowPay(true);
   }
+
+  // 결제 취소
+
 
   const handleClosePopup = ()=>{
     setShowPay(false);

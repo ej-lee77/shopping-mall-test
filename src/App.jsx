@@ -18,10 +18,17 @@ import ProductDetail from './pages/ProductDetail'
 import { useProductStore } from './store/useProductStore'
 import { useEffect } from 'react'
 import ProductList from './components/ProductList'
+import { useAuthStore } from './store/useAuthStore'
+import SearchPage from './pages/SearchPage'
 
 function App() {
   const {onFetchItems, items} = useProductStore();
+  const {initAuth} = useAuthStore();
 
+  useEffect(()=>{
+    initAuth();
+  },[initAuth]);
+  
   useEffect(()=>{
     onFetchItems();
   }, [items]);
@@ -36,6 +43,8 @@ function App() {
         {/* 상세페이지 */}
         <Route path='/product/:id' element={<ProductDetail />}/>
         <Route path='/:category/:subCategory' element={<ProductList />}/>
+        {/* 전체검색페이지 */}
+        <Route path='/searchPage' element={<SearchPage />}/>
 
         <Route path="/all" element={<All />} />
         <Route path="/men" element={<Man />} />
